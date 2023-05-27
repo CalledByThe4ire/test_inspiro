@@ -1,0 +1,12 @@
+@import "../../styles/mixins";
+
+.header {
+  height: 42px;
+  margin-bottom: 10px;
+
+  &__wrapper {
+    @include container;
+
+    padding-left: 25px;
+  }
+}

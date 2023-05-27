@@ -1,0 +1,21 @@
+// gray-color-variables
+$gray-300: #f8f8f8;
+$gray-900: #363e45;
+
+// color-variables
+$blue: #6cafe9;
+$purple: #7367f0;
+$yellow: #ff9f43;
+$green: #28c76f;
+
+// theme-color-variables
+$info: $purple;
+
+// font-variables
+$font-family-sans-serif: "Montserrat", system-ui, -apple-system, "Segoe UI",
+  "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "Liberation Sans",
+  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+  "Noto Color Emoji";
+
+@import "~bootstrap/scss/bootstrap";
+@import "scaffolding";
