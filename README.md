@@ -14,4 +14,4 @@ npm start
 
 ---
 
-## [Live Demo](https://strong-strudel-83fc76.netlify.app)
+## [Live Demo](https://peaceful-starburst-6aeb47.netlify.app)
