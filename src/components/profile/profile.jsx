@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 import { useUserAPI } from "../../contexts";
 import { Color } from "../../consts";
@@ -6,7 +7,7 @@ import { getRandomNumber } from "../../utils";
 import styles from "./profile.module.scss";
 
 function Profile() {
-  const { user = {} } = useUserAPI();
+  const { user } = useUserAPI();
 
   return (
     <div
@@ -24,6 +25,7 @@ function Profile() {
             ]
           }`}
         >
+          {!user && <Spinner animation="border" />}
           {user?.firstName.at(0)}
         </span>
       </Link>

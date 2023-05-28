@@ -2,6 +2,9 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
+import { useSelector } from "react-redux";
+import {} from "../../features/posts/posts-slice";
+
 import styles from "./filter.module.scss";
 import classnames from "classnames";
 
