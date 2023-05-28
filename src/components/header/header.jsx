@@ -5,6 +5,8 @@ import Logo from "../logo/logo";
 import Profile from "../profile/profile";
 import styles from "./header.module.scss";
 
+import { APIUserContextProvider } from "../../contexts";
+
 function Header() {
   return (
     <Container fluid className={`${styles.header} bg-dark d-flex p-0`}>
@@ -16,7 +18,9 @@ function Header() {
             <Logo />
           </Link>
         </h1>
-        <Profile />
+        <APIUserContextProvider>
+          <Profile />
+        </APIUserContextProvider>
       </div>
     </Container>
   );
