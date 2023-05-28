@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 
-import Filter from "../filter/filter";
+import Filter from "../../features/filter/filter";
 import Posts from "../../features/posts/posts";
 import Pagination from "../pagination/pagination";
 

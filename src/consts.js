@@ -6,3 +6,8 @@ export const Color = {
   WARNING: "warning",
   INFO: "info",
 };
+
+export const SortDirection = {
+  ASCENDING: "ascending",
+  DESCENDING: "descending",
+};

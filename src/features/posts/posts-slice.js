@@ -11,6 +11,7 @@ const initialState = {
   status: "idle",
   error: null,
   list: [],
+  sortConfig: null,
 };
 
 const postsSlice = createSlice({

@@ -1,8 +1,7 @@
-table.posts {
+.posts {
   /* stylelint-disable */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
   /* stylelint-enable */
-
   thead {
     font-size: 12px;
     line-height: 15px;
@@ -95,6 +94,24 @@ table.posts {
 
     &:nth-child(5) {
       min-width: 19%;
+    }
+  }
+
+  &__th {
+    svg {
+      transition: transform 0.3s ease;
+    }
+
+    &--dir-ascending {
+      svg {
+        transform: rotate(0);
+      }
+    }
+
+    &--dir-descending {
+      svg {
+        transform: rotate(180deg);
+      }
     }
   }
 }
