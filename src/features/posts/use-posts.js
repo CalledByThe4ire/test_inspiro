@@ -9,7 +9,9 @@ export const usePosts = (id) => {
   const { status, error, qty } = useSelector(selectPostsInfo);
 
   useEffect(() => {
-    dispatch(loadPosts(id));
+    if (id) {
+      dispatch(loadPosts(id));
+    }
   }, [id, dispatch]);
 
   return [posts, { status, error, qty }];

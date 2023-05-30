@@ -11,3 +11,10 @@ export const SortDirection = {
   ASCENDING: "ascending",
   DESCENDING: "descending",
 };
+
+export const Separator = {
+  PREV: "prev",
+  NEXT: "next",
+};
+
+export const PAGE_SIZE = 1;

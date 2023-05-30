@@ -4,7 +4,6 @@ import Spinner from "react-bootstrap/Spinner";
 
 import Filter from "../../features/filter/filter";
 import Posts from "../../features/posts/posts";
-import Pagination from "../pagination/pagination";
 
 import { useUserAPI } from "../../contexts";
 import { usePosts } from "../../features/posts/use-posts";
@@ -41,7 +40,6 @@ function MainPage() {
             </h3>
             <Filter />
             <Posts />
-            <Pagination />
           </>
         )}
       </div>

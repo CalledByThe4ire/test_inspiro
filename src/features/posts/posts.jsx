@@ -1,33 +1,48 @@
-import { useSelector } from "react-redux";
+import { useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
+import classnames from "classnames";
 
 import { useUserAPI } from "../../contexts";
 import { useSortableData } from "../sort/use-sortable-data";
 import { selectAllPosts } from "./posts-slice";
+import {
+  selectPagination,
+  setCurrentPage,
+} from "../pagination/pagination-slice";
 import { selectFilter } from "../filter/filter-slice";
-import { Color } from "../../consts";
+import { Color, PAGE_SIZE } from "../../consts";
 
 import { ReactComponent as ReactCaret } from "../../assets/images/table-caret.svg";
+import Pagination from "../pagination/pagination";
 import styles from "./posts.module.scss";
 
 function Posts() {
+  const dispatch = useDispatch();
   const { user } = useUserAPI();
   const posts = useSelector(selectAllPosts);
   const filter = useSelector(selectFilter);
+  const { currentPage } = useSelector(selectPagination);
   const { items, requestSort, sort } = useSortableData(posts);
 
   const filteredItems = items.filter((item) =>
     item.title.toLowerCase().includes(filter)
   );
 
-  const getClassNamesFor = (name) => {
+  const getSortDirectionClassName = (name) => {
     if (!sort) {
       return;
     }
     return sort.key === name ? sort.direction : "";
   };
+
+  const currentPostsData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
+    const lastPageIndex = firstPageIndex + PAGE_SIZE;
+    return filteredItems.slice(firstPageIndex, lastPageIndex);
+  }, [filteredItems, currentPage]);
 
   return (
     <>
@@ -39,13 +54,15 @@ function Posts() {
             <thead>
               <tr>
                 <th
-                  className={`text-center ${styles["posts"]} ${
-                    styles["posts__th"]
-                  } ${
-                    getClassNamesFor("id")
-                      ? styles[`posts__th--dir-${getClassNamesFor("id")}`]
-                      : ""
-                  }`}
+                  className={classnames("text-center", {
+                    [`${styles["posts"]}`]: true,
+                    [`${styles["posts__th"]}`]: true,
+                    [`${
+                      styles[
+                        `posts__th--dir-${getSortDirectionClassName("id")}`
+                      ]
+                    }`]: getSortDirectionClassName("id"),
+                  })}
                 >
                   <Link onClick={() => requestSort("id")}>
                     <span>id</span>
@@ -58,9 +75,11 @@ function Posts() {
                   className={`text-center ${styles["posts"]} ${
                     styles["posts__th"]
                   } ${
-                    getClassNamesFor("reactions")
+                    getSortDirectionClassName("reactions")
                       ? styles[
-                          `posts__th--dir-${getClassNamesFor("reactions")}`
+                          `posts__th--dir-${getSortDirectionClassName(
+                            "reactions"
+                          )}`
                         ]
                       : ""
                   }`}
@@ -74,7 +93,7 @@ function Posts() {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.map((item) => {
+              {currentPostsData.map((item) => {
                 const postInfo = {
                   id: item?.id,
                   title: item?.title,
@@ -119,6 +138,12 @@ function Posts() {
               })}
             </tbody>
           </Table>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={filteredItems.length}
+            pageSize={PAGE_SIZE}
+            handlePageChange={(page) => dispatch(setCurrentPage(page))}
+          />
         </>
       )}
     </>

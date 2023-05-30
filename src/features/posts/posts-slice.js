@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const loadPosts = createAsyncThunk(
-  "@@countries/load-countries",
+  "@@posts",
   (id, { extra: { client, API } }) => {
     return client.get(API.getPostsByUserId(id));
   }
