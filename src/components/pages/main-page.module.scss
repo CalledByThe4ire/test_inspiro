@@ -1,6 +1,8 @@
 @import "../../styles/mixins";
 
 .main-page {
+  display: flex;
+
   &__title {
     margin-bottom: 20px;
     font-size: 28px;
@@ -10,7 +12,6 @@
     @include container;
 
     height: 100%;
-    padding-right: 52px;
-    padding-left: 44px;
+    padding: 10px 52px 10px 44px;
   }
 }

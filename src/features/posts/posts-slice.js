@@ -1,15 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { FetchStatus } from "../../consts";
 
-export const loadPosts = createAsyncThunk(
-  "@@posts",
-  (id, { extra: { client, API } }) => {
-    return client.get(API.getPostsByUserId(id));
+export const loadPostsAsync = createAsyncThunk(
+  "@@posts/loadPosts",
+  (arg, { extra: { client, API }, getState }) => {
+    const { lazyLoading } = arg;
+    const { pagination, posts } = getState();
+    const paramsCfg = {
+      limit: pagination.pageSize,
+      skip: lazyLoading
+        ? posts.list.length
+        : (pagination.currentPage - 1) * pagination.pageSize,
+    };
+
+    return client.get(API.getPostsBy(paramsCfg));
   }
 );
 
 const initialState = {
   status: "idle",
   error: null,
+  total: 0,
   list: [],
   sortConfig: null,
 };
@@ -20,18 +31,27 @@ const postsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadPosts.pending, (state) => {
-        state.status = "loading";
+      .addCase(loadPostsAsync.pending, (state) => {
+        state.status = FetchStatus.LOADING;
         state.error = null;
       })
-      .addCase(loadPosts.rejected, (state, action) => {
-        state.status = "rejected";
+      .addCase(loadPostsAsync.rejected, (state, action) => {
+        state.status = FetchStatus.REJECTED;
         state.error = action.payload || action.meta.error;
       })
-      .addCase(loadPosts.fulfilled, (state, action) => {
-        state.status = "received";
+      .addCase(loadPostsAsync.fulfilled, (state, action) => {
+        const { lazyLoading } = action.meta.arg;
+        const { posts } = action.payload.data;
+
+        state.status = FetchStatus.RECEIVED;
         state.error = null;
-        state.list = action.payload.data.posts;
+        state.total = action.payload.data.total;
+
+        if (lazyLoading) {
+          state.list.push(...posts);
+        } else {
+          state.list = posts;
+        }
       });
   },
 });
@@ -42,7 +62,8 @@ export const postsReducer = postsSlice.reducer;
 export const selectPostsInfo = (state) => ({
   status: state.posts.status,
   error: state.posts.error,
+  total: state.posts.total,
   qty: state.posts.list.length,
 });
 
-export const selectAllPosts = (state) => state.posts.list;
+export const selectPosts = (state) => state.posts.list;

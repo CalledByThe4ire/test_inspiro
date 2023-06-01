@@ -1,17 +1,31 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
 import { useDispatch } from "react-redux";
-import { addFilter } from "./filter-slice";
+import { addFilter, selectFilter } from "./filter-slice";
 
 import styles from "./filter.module.scss";
 
+const addFocus = (el) => {
+  el?.select();
+  el?.focus();
+};
+
 function Filter() {
+  const filter = useSelector(selectFilter);
   const formControlRef = useRef();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(filter);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (filter) {
+      setSearch(filter.trim());
+      addFocus(formControlRef?.current);
+    }
+  }, [filter]);
+
   return (
     <div className={`${styles.filter} d-flex flex-row flex-wrap`}>
       <Form.Label
@@ -38,8 +52,7 @@ function Filter() {
           evt.preventDefault();
 
           dispatch(addFilter(search.trim()));
-          formControlRef?.current.focus();
-          formControlRef?.current.select();
+          addFocus(formControlRef?.current);
         }}
       >
         Фильтровать

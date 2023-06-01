@@ -2,5 +2,6 @@
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100vh;
+  overflow-y: auto;
   background-color: var(--bs-gray-200);
 }

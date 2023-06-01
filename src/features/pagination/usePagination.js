@@ -1,6 +1,4 @@
-import React from "react";
 import { useMemo } from "react";
-
 import { Separator } from "../../consts";
 
 const range = (start, end) => {

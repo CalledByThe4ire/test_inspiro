@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
@@ -6,10 +7,11 @@ import classnames from "classnames";
 
 import { Separator } from "../../consts";
 import { usePagination } from "./usePagination";
-import { setIsHidden, selectPagination } from "./pagination-slice";
+import { setIsHiddenAsync, selectPagination } from "./pagination-slice";
 import { ReactComponent as IconClose } from "../../assets/images/cross.svg";
 import { ReactComponent as IconFirstLast } from "../../assets/images/pagination-caret-first-last.svg";
 import { ReactComponent as IconPrevNext } from "../../assets/images/pagination-caret-prev-next.svg";
+import PaginationInput from "./parts/input/input";
 import styles from "./pagination.module.scss";
 
 function Pagination(props) {
@@ -29,7 +31,17 @@ function Pagination(props) {
   });
 
   const dispatch = useDispatch();
+  const paginationRef = useRef(null);
   const { isHidden } = useSelector(selectPagination);
+
+  useEffect(() => {
+    if (!isHidden) {
+      paginationRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  });
 
   if (currentPage === 0 || paginationRange.length < 2) {
     return null;
@@ -43,18 +55,20 @@ function Pagination(props) {
     handlePageChange(currentPage - 1);
   };
 
-  let lastPage = paginationRange[paginationRange.length - 1];
+  const lastPage = paginationRange[paginationRange.length - 1];
 
   return (
     <Card
       className={classnames("mt-auto", {
         [`${styles["pagination"]}`]: true,
-        [`${styles["pagination--is-hidden"]}`]: isHidden,
+        "visually-hidden": isHidden,
       })}
+      ref={paginationRef}
     >
-      <Card.Body className="d-flex flex-column flex-wrap align-items-center justify-content-center p-2">
+      <Card.Body className="d-flex flex-row flex-wrap align-items-center justify-content-center p-2">
+        <PaginationInput />
         <ul
-          className={`${styles["pagination__list"]} d-flex align-items-center justify-content-center ms-auto`}
+          className={`${styles["pagination__list"]} d-flex align-items-center justify-content-center`}
         >
           <li
             className={classnames({
@@ -101,7 +115,7 @@ function Pagination(props) {
                 key={pageNumber}
                 className={classnames({
                   [`${styles["pagination__item"]}`]: true,
-                  [`${styles["pagination__item--active"]}`]:
+                  [`${styles["pagination__item--active"]} ${styles["pagination__item--disabled"]}`]:
                     pageNumber === currentPage,
                 })}
               >
@@ -141,7 +155,7 @@ function Pagination(props) {
             [`${styles["pagination__btn--close"]}`]: true,
             [`${styles["pagination__btn--is-hidden"]}`]: isHidden,
           })}
-          onClick={() => dispatch(setIsHidden())}
+          onClick={() => dispatch(setIsHiddenAsync())}
         >
           <IconClose />
         </Button>

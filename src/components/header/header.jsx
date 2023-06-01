@@ -7,7 +7,11 @@ import styles from "./header.module.scss";
 
 function Header() {
   return (
-    <Container fluid className={`${styles.header} bg-dark d-flex p-0`}>
+    <Container
+      fluid
+      className={`${styles.header} bg-dark d-flex p-0`}
+      as="header"
+    >
       <div
         className={`${styles["header__wrapper"]} d-flex align-items-center justify-content-between`}
       >

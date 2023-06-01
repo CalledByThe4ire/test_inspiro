@@ -9,16 +9,17 @@ const APIUserContext = createContext();
 export function APIUserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUserById(id = getRandomNumber()) {
       try {
-        const { data } = await axios.get(API.getUserById(getRandomNumber()));
+        const { data } = await axios.get(API.getUserById(id));
         setUser(data);
       } catch (err) {
         console.error(err.message);
         throw new Error(err);
       }
     }
-    fetchData();
+
+    fetchUserById();
   }, []);
   return (
     <APIUserContext.Provider

@@ -26,7 +26,7 @@ function Profile() {
           }`}
         >
           {!user && <Spinner animation="border" />}
-          {user?.firstName.at(0)}
+          {user?.firstName?.at(0)}
         </span>
       </Link>
       <Link

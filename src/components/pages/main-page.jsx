@@ -5,43 +5,34 @@ import Spinner from "react-bootstrap/Spinner";
 import Filter from "../../features/filter/filter";
 import Posts from "../../features/posts/posts";
 
-import { useUserAPI } from "../../contexts";
-import { usePosts } from "../../features/posts/use-posts";
 import { selectPostsInfo } from "../../features/posts/posts-slice";
+import { FetchStatus } from "../../consts";
 
 import styles from "./main-page.module.scss";
 
 function MainPage() {
-  const { error, status, qty } = useSelector(selectPostsInfo);
-  const { user } = useUserAPI();
-  usePosts(user?.id);
+  const { status, error } = useSelector(selectPostsInfo);
 
   return (
     <Container
       fluid
       className={`${styles["main-page"]} d-flex flex-column flex-wrap p-0`}
+      as="main"
     >
       <div
         className={`${styles["main-page__wrapper"]} d-flex flex-column flex-wrap`}
       >
         {error && <h2>Не удалось получить данные от сервера</h2>}
-        {status === "loading" && (
+        {status === FetchStatus.LOADING && (
           <h3>
-            <Spinner animation="grow" /> Загружаем посты...
+            <Spinner animation="border" /> Загружаем посты...
           </h3>
         )}
-        {status === "received" && qty === 0 && (
-          <h3>{`У пользователя ${user?.firstName} ${user?.lastName} нет постов`}</h3>
-        )}
-        {status === "received" && qty !== 0 && (
-          <>
-            <h3 className={styles["main-page__title"]}>
-              Посты пользователя {user?.firstName} {user?.lastName}
-            </h3>
-            <Filter />
-            <Posts />
-          </>
-        )}
+        <>
+          <h3 className={styles["main-page__title"]}>Посты</h3>
+          <Filter />
+          <Posts />
+        </>
       </div>
     </Container>
   );

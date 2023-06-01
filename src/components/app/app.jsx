@@ -1,20 +1,20 @@
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Header from "../header/header";
 import MainPage from "../pages/main-page";
-
-import styles from "./app.module.scss";
-import classnames from "classnames";
-
+import Layout from "../layout/layout";
 import { APIUserContextProvider } from "../../contexts";
+import styles from "./app.module.scss";
 
 function App() {
   return (
     <Router>
-      <div className={classnames(styles.app)}>
+      <div className={styles.app}>
         <APIUserContextProvider>
-          <Header />
-          <MainPage />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<MainPage />} />
+            </Route>
+          </Routes>
         </APIUserContextProvider>
       </div>
     </Router>
