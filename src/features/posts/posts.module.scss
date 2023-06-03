@@ -1,25 +1,29 @@
 .posts {
+  display: block;
+  max-height: calc(100% - 288px);
   overflow-y: auto;
   /* stylelint-disable */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
   /* stylelint-enable */
 
   &--is-lazy {
-    max-height: initial;
-    overflow-y: initial;
+    max-height: calc(100% - 200px);
   }
 
   &__table {
     margin-bottom: 0;
 
     thead {
+      position: sticky;
+      top: 0;
       font-size: 12px;
       line-height: 15px;
       color: var(--bs-gray-900);
       letter-spacing: 1px;
       /* stylelint-disable */
-      background-color: rgba(175, 178, 181, 0.12);
+      background-color: lighten(#afb2b5, 25%);
       /* stylelint-enable */
+
       border-bottom: 1px solid var(--bs-gray-400);
     }
 
@@ -107,7 +111,7 @@
       }
     }
 
-    &__th {
+    &-th {
       svg {
         transition: transform 0.3s ease;
       }

@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import Spinner from "react-bootstrap/Spinner";
 import classnames from "classnames";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { useSortableData } from "../sort/use-sortable-data";
 import { loadPostsAsync, selectPosts, selectPostsInfo } from "./posts-slice";
@@ -44,6 +45,7 @@ function Posts() {
   } = useSelector(selectPagination);
   const { items, requestSort, sort } = useSortableData(posts);
   const [searchParams] = useSearchParams();
+  const [autoAnimateRef] = useAutoAnimate();
 
   useEffect(() => {
     searchParams.forEach((value, key) => {
@@ -65,7 +67,6 @@ function Posts() {
 
   useEffect(() => {
     let timerId;
-    const total = 20;
 
     if (isPaginationHidden) {
       postsRef?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -108,7 +109,7 @@ function Posts() {
 
   return (
     <>
-      {filteredItems.length === 0 ? (
+      {filter && filteredItems.length === 0 ? (
         <h3>Посты не найдены...</h3>
       ) : (
         <>
@@ -117,21 +118,24 @@ function Posts() {
               [`${styles["posts"]}`]: true,
               [`${styles["posts--is-lazy"]}`]: isPaginationHidden,
             })}
-            ref={postsRef}
+            ref={autoAnimateRef}
           >
             <Table
               hover
               className={`${styles["posts__table"]} bg-white rounded`}
+              ref={postsRef}
             >
               <thead>
                 <tr>
                   <th
                     className={classnames("text-center", {
                       [`${styles["posts"]}`]: true,
-                      [`${styles["posts__th"]}`]: true,
+                      [`${styles["posts__table-th"]}`]: true,
                       [`${
                         styles[
-                          `posts__th--dir-${getSortDirectionClassName("id")}`
+                          `posts__table-th--dir-${getSortDirectionClassName(
+                            "id"
+                          )}`
                         ]
                       }`]: getSortDirectionClassName("id"),
                     })}
@@ -145,11 +149,11 @@ function Posts() {
                   <th>Теги</th>
                   <th
                     className={`text-center ${styles["posts"]} ${
-                      styles["posts__th"]
+                      styles["posts__table-th"]
                     } ${
                       getSortDirectionClassName("reactions")
                         ? styles[
-                            `posts__th--dir-${getSortDirectionClassName(
+                            `posts__table-th--dir-${getSortDirectionClassName(
                               "reactions"
                             )}`
                           ]

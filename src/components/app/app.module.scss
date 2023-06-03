@@ -1,7 +1,7 @@
 .app {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 100vh;
-  overflow-y: auto;
+  display: flex;
+  flex-flow: column wrap;
+  width: inherit;
+  height: inherit;
   background-color: var(--bs-gray-200);
 }

@@ -8,6 +8,7 @@ import classnames from "classnames";
 import { Separator } from "../../consts";
 import { usePagination } from "./usePagination";
 import { setIsHiddenAsync, selectPagination } from "./pagination-slice";
+import { selectPostsInfo } from "../posts/posts-slice";
 import { ReactComponent as IconClose } from "../../assets/images/cross.svg";
 import { ReactComponent as IconFirstLast } from "../../assets/images/pagination-caret-first-last.svg";
 import { ReactComponent as IconPrevNext } from "../../assets/images/pagination-caret-prev-next.svg";
@@ -33,6 +34,7 @@ function Pagination(props) {
   const dispatch = useDispatch();
   const paginationRef = useRef(null);
   const { isHidden } = useSelector(selectPagination);
+  const { qty } = useSelector(selectPostsInfo);
 
   useEffect(() => {
     if (!isHidden) {
@@ -41,7 +43,7 @@ function Pagination(props) {
         block: "end",
       });
     }
-  });
+  }, [qty, isHidden]);
 
   if (currentPage === 0 || paginationRange.length < 2) {
     return null;

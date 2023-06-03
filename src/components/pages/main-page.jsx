@@ -11,7 +11,7 @@ import { FetchStatus } from "../../consts";
 import styles from "./main-page.module.scss";
 
 function MainPage() {
-  const { status, error } = useSelector(selectPostsInfo);
+  const { status, error, qty } = useSelector(selectPostsInfo);
 
   return (
     <Container
@@ -19,17 +19,19 @@ function MainPage() {
       className={`${styles["main-page"]} d-flex flex-column flex-wrap p-0`}
       as="main"
     >
-      <div
-        className={`${styles["main-page__wrapper"]} d-flex flex-column flex-wrap`}
-      >
+      <div className={`${styles["main-page__wrapper"]}`}>
         {error && <h2>Не удалось получить данные от сервера</h2>}
         {status === FetchStatus.LOADING && (
           <h3>
             <Spinner animation="border" /> Загружаем посты...
           </h3>
         )}
+        {status === FetchStatus.RECEIVED && qty !== 0 && (
+          <>
+            <h3 className={styles["main-page__title"]}>Посты</h3>
+          </>
+        )}
         <>
-          <h3 className={styles["main-page__title"]}>Посты</h3>
           <Filter />
           <Posts />
         </>

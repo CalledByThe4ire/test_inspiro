@@ -1,7 +1,8 @@
 @import "../../styles/mixins";
 
 .main-page {
-  display: flex;
+  width: inherit;
+  height: inherit;
 
   &__title {
     margin-bottom: 20px;
@@ -11,7 +12,11 @@
   &__wrapper {
     @include container;
 
-    height: 100%;
-    padding: 10px 52px 10px 44px;
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    width: inherit;
+    padding: 10px 52px 5px 44px;
+    overflow: hidden;
   }
 }

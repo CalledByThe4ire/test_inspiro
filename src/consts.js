@@ -35,6 +35,6 @@ export const Range = {
   MAX: 10,
 };
 
-export const LAZY_LOADING_INTERVAL = 5000;
+export const LAZY_LOADING_INTERVAL = 30000;
 
 export const LAZY_LOADING_ITEMS_LIMIT = 10;

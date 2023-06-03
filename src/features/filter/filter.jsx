@@ -27,7 +27,7 @@ function Filter() {
   }, [filter]);
 
   return (
-    <div className={`${styles.filter} d-flex flex-row flex-wrap`}>
+    <div className={`${styles.filter} d-flex flex-row flex-wrap w-100`}>
       <Form.Label
         htmlFor="basic-url"
         className={`${styles["filter__title"]} d-flex mb-2`}
