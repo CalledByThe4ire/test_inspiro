@@ -9,15 +9,18 @@ import classnames from "classnames";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { useSortableData } from "../sort/use-sortable-data";
-import { loadPostsAsync, selectPosts, selectPostsInfo } from "./posts-slice";
+import {
+  loadPostsUsersAsync,
+  selectPosts,
+  selectPostsInfo,
+} from "./posts-slice";
 import {
   setPageSizeAsync,
   setCurrentPageAsync,
   selectPagination,
 } from "../pagination/pagination-slice";
-import { selectUsersInfo } from "../users/users-slice";
+import { selectUsers, selectUsersInfo } from "../users/users-slice";
 import { addFilter, selectFilter } from "../filter/filter-slice";
-import { useUsers } from "../users/use-users";
 import {
   Color,
   FetchStatus,
@@ -35,7 +38,7 @@ function Posts() {
   const postsRef = useRef(null);
   const { total, qty } = useSelector(selectPostsInfo);
   const { status: userFetchStatus } = useSelector(selectUsersInfo);
-  const users = useUsers();
+  const users = useSelector(selectUsers);
   const posts = useSelector(selectPosts);
   const filter = useSelector(selectFilter);
   const {
@@ -76,12 +79,16 @@ function Posts() {
             dispatch(setPageSizeAsync(LAZY_LOADING_ITEMS_LIMIT))
               .then(() => dispatch(setCurrentPageAsync(currentPage + 1)))
               .then(() => {
-                dispatch(loadPostsAsync({ lazyLoading: isPaginationHidden }));
+                dispatch(
+                  loadPostsUsersAsync({ lazyLoading: isPaginationHidden })
+                );
               });
           } else {
             dispatch(setPageSizeAsync(total - qty))
               .then(() =>
-                dispatch(loadPostsAsync({ lazyLoading: isPaginationHidden }))
+                dispatch(
+                  loadPostsUsersAsync({ lazyLoading: isPaginationHidden })
+                )
               )
               .then(() => {
                 timerId = clearInterval(timerId);
@@ -90,7 +97,7 @@ function Posts() {
         }, LAZY_LOADING_INTERVAL);
       }
     } else {
-      dispatch(loadPostsAsync({ lazyLoading: isPaginationHidden }));
+      dispatch(loadPostsUsersAsync({ lazyLoading: isPaginationHidden }));
     }
 
     return () => clearInterval(timerId);
@@ -170,7 +177,7 @@ function Posts() {
               </thead>
               <tbody>
                 {filteredItems.map((item) => {
-                  const [user] = users.filter(({ id }) => {
+                  const user = users.find(({ id }) => {
                     return id === item.userId;
                   });
 

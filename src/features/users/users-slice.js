@@ -1,16 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { FetchStatus } from "../../consts";
 
-export const loadUsersAsync = createAsyncThunk(
-  "@@users/loadUsers",
-  async (_, { getState, extra: { client, API } }) => {
-    const userPromises = await getState().posts.list.map((item) =>
-      client.get(API.getUserById(item.userId))
-    );
-    const result = await Promise.all(userPromises);
-    return result;
-  }
-);
+import { loadPostsUsersAsync } from "../posts/posts-slice";
 
 const initialState = {
   status: "idle",
@@ -24,17 +15,17 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadUsersAsync.pending, (state) => {
+      .addCase(loadPostsUsersAsync.pending, (state) => {
         state.status = FetchStatus.LOADING;
         state.error = null;
       })
-      .addCase(loadUsersAsync.rejected, (state, action) => {
+      .addCase(loadPostsUsersAsync.rejected, (state, action) => {
         state.status = FetchStatus.REJECTED;
         state.error = action.payload || action.meta.error;
       })
-      .addCase(loadUsersAsync.fulfilled, (state, action) => {
+      .addCase(loadPostsUsersAsync.fulfilled, (state, action) => {
         const { lazyLoading } = action.meta.arg;
-        const users = action.payload.map(({ data }) => data);
+        const { users } = action.payload;
         state.status = FetchStatus.RECEIVED;
         state.error = null;
 

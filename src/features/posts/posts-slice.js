@@ -1,19 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FetchStatus } from "../../consts";
 
-export const loadPostsAsync = createAsyncThunk(
-  "@@posts/loadPosts",
-  (arg, { extra: { client, API }, getState }) => {
+export const loadPostsUsersAsync = createAsyncThunk(
+  "@@posts/loadPostsUsers",
+  async (arg, { extra: { client, API }, getState }) => {
     const { lazyLoading } = arg;
-    const { pagination, posts } = getState();
+
+    const {
+      pagination,
+      posts: { list },
+    } = getState();
+
     const paramsCfg = {
       limit: pagination.pageSize,
       skip: lazyLoading
-        ? posts.list.length
+        ? list.length
         : (pagination.currentPage - 1) * pagination.pageSize,
     };
 
-    return client.get(API.getPostsBy(paramsCfg));
+    const {
+      data: { posts, total },
+    } = await client.get(API.getPostsBy(paramsCfg));
+
+    const userPromises = await posts.map((item) =>
+      client.get(API.getUserById(item.userId))
+    );
+    const users = await Promise.all(userPromises);
+
+    return {
+      posts,
+      total,
+      users: users.map(({ data }) => data),
+    };
   }
 );
 
@@ -31,21 +49,21 @@ const postsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadPostsAsync.pending, (state) => {
+      .addCase(loadPostsUsersAsync.pending, (state) => {
         state.status = FetchStatus.LOADING;
         state.error = null;
       })
-      .addCase(loadPostsAsync.rejected, (state, action) => {
+      .addCase(loadPostsUsersAsync.rejected, (state, action) => {
         state.status = FetchStatus.REJECTED;
         state.error = action.payload || action.meta.error;
       })
-      .addCase(loadPostsAsync.fulfilled, (state, action) => {
+      .addCase(loadPostsUsersAsync.fulfilled, (state, action) => {
         const { lazyLoading } = action.meta.arg;
-        const { posts } = action.payload.data;
+        const { posts, total } = action.payload;
 
         state.status = FetchStatus.RECEIVED;
         state.error = null;
-        state.total = action.payload.data.total;
+        state.total = total;
 
         if (lazyLoading) {
           state.list.push(...posts);
