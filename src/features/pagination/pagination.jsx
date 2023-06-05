@@ -61,7 +61,7 @@ function Pagination(props) {
 
   return (
     <Card
-      className={classnames("mt-auto", {
+      className={classnames({
         [`${styles["pagination"]}`]: true,
         "visually-hidden": isHidden,
       })}

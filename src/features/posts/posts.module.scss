@@ -1,17 +1,12 @@
 .posts {
-  display: block;
-  max-height: calc(100% - 288px);
+  position: relative;
   overflow-y: auto;
-  /* stylelint-disable */
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
-  /* stylelint-enable */
-
-  &--is-lazy {
-    max-height: calc(100% - 200px);
-  }
 
   &__table {
-    margin-bottom: 0;
+    margin: 0;
+    /* stylelint-disable */
+    // box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.16);
+    /* stylelint-enable */
 
     thead {
       position: sticky;

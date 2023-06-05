@@ -121,15 +121,16 @@ function Posts() {
       ) : (
         <>
           <div
-            className={classnames({
-              [`${styles["posts"]}`]: true,
-              [`${styles["posts--is-lazy"]}`]: isPaginationHidden,
-            })}
+            className={classnames(
+              {
+                [`${styles["posts"]}`]: true,
+              },
+              "rounded"
+            )}
             ref={autoAnimateRef}
           >
             <Table
-              hover
-              className={`${styles["posts__table"]} bg-white rounded`}
+              className={`${styles["posts__table"]} bg-white`}
               ref={postsRef}
             >
               <thead>

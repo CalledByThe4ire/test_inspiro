@@ -14,11 +14,7 @@ function MainPage() {
   const { status, error, qty } = useSelector(selectPostsInfo);
 
   return (
-    <Container
-      fluid
-      className={`${styles["main-page"]} d-flex flex-column flex-wrap p-0`}
-      as="main"
-    >
+    <Container fluid className={`${styles["main-page"]}`} as="main">
       <div className={`${styles["main-page__wrapper"]}`}>
         {error && <h2>Не удалось получить данные от сервера</h2>}
         {status === FetchStatus.LOADING && (
