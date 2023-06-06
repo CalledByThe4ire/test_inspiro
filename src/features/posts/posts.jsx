@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import Spinner from "react-bootstrap/Spinner";
 import classnames from "classnames";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useSortableData } from "../sort/use-sortable-data";
 import {
@@ -145,113 +146,131 @@ function Posts() {
             )}
             ref={parentRef}
           >
-            <Table className={`${styles["posts__table"]} bg-white`}>
-              <thead>
-                <tr>
-                  <th
-                    className={classnames("text-center", {
-                      [`${styles["posts"]}`]: true,
-                      [`${styles["posts__table-th"]}`]: true,
-                      [`${
-                        styles[
-                          `posts__table-th--dir-${getSortDirectionClassName(
-                            "id"
-                          )}`
-                        ]
-                      }`]: getSortDirectionClassName("id"),
-                    })}
-                  >
-                    <Link onClick={() => requestSort("id")}>
-                      <span>id</span>
-                      <ReactCaret />
-                    </Link>
-                  </th>
-                  <th>Заголовок</th>
-                  <th>Теги</th>
-                  <th
-                    className={`text-center ${styles["posts"]} ${
-                      styles["posts__table-th"]
-                    } ${
-                      getSortDirectionClassName("reactions")
-                        ? styles[
-                            `posts__table-th--dir-${getSortDirectionClassName(
-                              "reactions"
-                            )}`
-                          ]
-                        : ""
-                    }`}
-                  >
-                    <Link onClick={() => requestSort("reactions")}>
-                      <span>Реакции</span>
-                      <ReactCaret />
-                    </Link>
-                  </th>
-                  <th>Автор</th>
-                </tr>
-              </thead>
-              <tbody ref={postsRef}>
-                {filteredItems.map((item) => {
-                  const user = users.find(({ id }) => {
-                    return id === item.userId;
-                  });
-
-                  const postInfo = {
-                    id: item?.id,
-                    title: item?.title,
-                    body: item?.body,
-                    tags: item?.tags,
-                    reactions: item?.reactions,
-                    userName: `${user?.firstName} ${user?.lastName}`,
-                  };
-
-                  return (
-                    <tr key={postInfo.id}>
-                      <td className="text-center">{postInfo.id}</td>
-                      <td>
-                        <h4>{postInfo.title}</h4>
-                        <p>{postInfo.body}</p>
-                      </td>
-                      <td>
-                        <ul className="d-flex flex-row">
-                          {postInfo.tags.map((tag, id) => {
-                            return (
-                              <li key={tag}>
-                                <Badge
-                                  bg={
-                                    id === 0
-                                      ? Color.SUCCESS
-                                      : id === 1
-                                      ? Color.PRIMARY
-                                      : Color.WARNING
-                                  }
-                                >
-                                  {tag}
-                                </Badge>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </td>
-                      <td className="text-center">{postInfo.reactions}</td>
-                      <td>
-                        {userFetchStatus === FetchStatus.LOADING ? (
-                          <Spinner animation="border" />
-                        ) : (
-                          postInfo.userName
-                        )}
-                      </td>
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 2 }}
+              >
+                <Table className={`${styles["posts__table"]} bg-white`}>
+                  <thead>
+                    <tr>
+                      <th
+                        className={classnames("text-center", {
+                          [`${styles["posts"]}`]: true,
+                          [`${styles["posts__table-th"]}`]: true,
+                          [`${
+                            styles[
+                              `posts__table-th--dir-${getSortDirectionClassName(
+                                "id"
+                              )}`
+                            ]
+                          }`]: getSortDirectionClassName("id"),
+                        })}
+                      >
+                        <Link onClick={() => requestSort("id")}>
+                          <span>id</span>
+                          <ReactCaret />
+                        </Link>
+                      </th>
+                      <th>Заголовок</th>
+                      <th>Теги</th>
+                      <th
+                        className={`text-center ${styles["posts"]} ${
+                          styles["posts__table-th"]
+                        } ${
+                          getSortDirectionClassName("reactions")
+                            ? styles[
+                                `posts__table-th--dir-${getSortDirectionClassName(
+                                  "reactions"
+                                )}`
+                              ]
+                            : ""
+                        }`}
+                      >
+                        <Link onClick={() => requestSort("reactions")}>
+                          <span>Реакции</span>
+                          <ReactCaret />
+                        </Link>
+                      </th>
+                      <th>Автор</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
+                  </thead>
+                  <tbody ref={postsRef}>
+                    {filteredItems.map((item) => {
+                      const user = users.find(({ id }) => {
+                        return id === item.userId;
+                      });
+
+                      const postInfo = {
+                        id: item?.id,
+                        title: item?.title,
+                        body: item?.body,
+                        tags: item?.tags,
+                        reactions: item?.reactions,
+                        userName: `${user?.firstName} ${user?.lastName}`,
+                      };
+
+                      return (
+                        <tr key={postInfo.id}>
+                          <td className="text-center">{postInfo.id}</td>
+                          <td>
+                            <h4>{postInfo.title}</h4>
+                            <p>{postInfo.body}</p>
+                          </td>
+                          <td>
+                            <ul className="d-flex flex-row">
+                              {postInfo.tags.map((tag, id) => {
+                                return (
+                                  <li key={tag}>
+                                    <Badge
+                                      bg={
+                                        id === 0
+                                          ? Color.SUCCESS
+                                          : id === 1
+                                          ? Color.PRIMARY
+                                          : Color.WARNING
+                                      }
+                                    >
+                                      {tag}
+                                    </Badge>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </td>
+                          <td className="text-center">{postInfo.reactions}</td>
+                          <td>
+                            {userFetchStatus === FetchStatus.LOADING ? (
+                              <Spinner animation="border" />
+                            ) : (
+                              postInfo.userName
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </motion.div>
+            </AnimatePresence>
           </div>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={total}
-            pageSize={pageSize}
-            handlePageChange={(page) => dispatch(setCurrentPageAsync(page))}
-          />
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 1, duration: 0.5 }}
+            >
+              <Pagination
+                currentPage={currentPage}
+                totalCount={total}
+                pageSize={pageSize}
+                handlePageChange={(page) => dispatch(setCurrentPageAsync(page))}
+              />
+            </motion.div>
+          </AnimatePresence>
         </>
       )}
     </>
