@@ -32,7 +32,7 @@ export const SearchParam = {
 
 export const Range = {
   MIN: 1,
-  MAX: 10,
+  MAX: 12,
 };
 
 export const LAZY_LOADING_INTERVAL = 30000;

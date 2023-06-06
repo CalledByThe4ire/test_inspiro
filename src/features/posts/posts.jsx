@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,7 +6,6 @@ import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import Spinner from "react-bootstrap/Spinner";
 import classnames from "classnames";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { useSortableData } from "../sort/use-sortable-data";
 import {
@@ -35,7 +34,9 @@ import styles from "./posts.module.scss";
 
 function Posts() {
   const dispatch = useDispatch();
+  const parentRef = useRef(null);
   const postsRef = useRef(null);
+  const [scrollValue, setScrollValue] = useState(0);
   const { total, qty } = useSelector(selectPostsInfo);
   const { status: userFetchStatus } = useSelector(selectUsersInfo);
   const users = useSelector(selectUsers);
@@ -48,7 +49,23 @@ function Posts() {
   } = useSelector(selectPagination);
   const { items, requestSort, sort } = useSortableData(posts);
   const [searchParams] = useSearchParams();
-  const [autoAnimateRef] = useAutoAnimate();
+
+  useEffect(() => {
+    if (isPaginationHidden) {
+      const parentElement = parentRef?.current;
+      const newScrollValue = postsRef?.current?.scrollHeight || 0;
+
+      if (parentElement) {
+        parentElement.scrollTop = scrollValue;
+
+        if (newScrollValue !== scrollValue) {
+          setScrollValue(newScrollValue);
+        }
+      }
+    }
+    /* eslint-disable */
+  }, [isPaginationHidden, posts]);
+  /* eslint-enable */
 
   useEffect(() => {
     searchParams.forEach((value, key) => {
@@ -72,7 +89,6 @@ function Posts() {
     let timerId;
 
     if (isPaginationHidden) {
-      postsRef?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       if (!timerId && total - qty > 0) {
         timerId = setInterval(() => {
           if (qty + LAZY_LOADING_ITEMS_LIMIT <= total) {
@@ -127,12 +143,9 @@ function Posts() {
               },
               "rounded"
             )}
-            ref={autoAnimateRef}
+            ref={parentRef}
           >
-            <Table
-              className={`${styles["posts__table"]} bg-white`}
-              ref={postsRef}
-            >
+            <Table className={`${styles["posts__table"]} bg-white`}>
               <thead>
                 <tr>
                   <th
@@ -176,7 +189,7 @@ function Posts() {
                   <th>Автор</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody ref={postsRef}>
                 {filteredItems.map((item) => {
                   const user = users.find(({ id }) => {
                     return id === item.userId;
